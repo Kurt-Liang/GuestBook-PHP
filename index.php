@@ -60,6 +60,12 @@ Released   : 20111223
     						$title = $row['title'];
 							$time = $row['time'];
 							$userName = $row['user_name'];
+							$user_id = $row['user_id'];
+							$id = $row['id'];
+							$del = "";
+							if ($_SESSION['userId'] == $user_id) {
+								$del = "Delete";
+							}
 							echo "<div class='post'>
 									<div class='post-bgtop'>
 										<div class='post-bgbtm'>
@@ -67,7 +73,7 @@ Released   : 20111223
 											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='#'>$userName</a></span></p>
 											<div class='entry'>
 												<p>$message</p>
-												<p class='links'><a href='#' class='more'>Read More</a><a href='#' title='b0x' class='comments'>Comments</a></p>
+												<p class='links'><a href='#' class='more'>Read More</a><a href='/delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
 											</div>
 										</div>
 									</div>
