@@ -30,13 +30,16 @@
   
   > 在這裡會先判斷用戶是否有輸入資訊，再獲取系統時間和 post 的 title 和 message 還有 session 的 userName 和 userId，都取得後輸入進 messages
 
+- delete.php
+  用戶在 index.php 可以刪除自己的留言，點擊 DELETE 後會使用 GET 傳送 id 到這裡，之後再將那篇 id 的留言刪除
+
 - guestbook.php
   > 讓用戶可以使用留言功能，需要登入才能使用，如果沒有登入會顯示登入提示
   
   > 有 title 和 message 兩個輸入框
 
 - index.php
-  > 主頁面顯示，會顯示所有的留言、時間和用戶
+  > 主頁面顯示，會顯示所有的留言、時間和用戶，如果登入用戶和留言是同個人，可以使用刪除功能
 
 - login.php
   > 實現登入功能，只有未登入時能使用這個功能
