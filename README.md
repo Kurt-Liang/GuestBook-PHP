@@ -6,16 +6,16 @@
 
 # DB 設計
 ### users
-- id int 自增長主鍵
+- id int primary key aut_increment
 - user_name char(20)
 - user_pwd char(40)
 - user_email char(64)
 ### messages
-- id int 自增長主鍵
+- id int primary key aut_increment
 - user_name char(20)
 - message char(255)
 - time char(16)
-- user_id int 外鍵關聯 users 的 id
+- user_id int references users(id)
 - title char(40)
 
 # GuestBook 主要功能
@@ -61,3 +61,28 @@
   > 執行註冊功能，先判斷用戶是否有輸入 user name 和 password，再判斷 user name 是否已被使用，沒被使用會再將 password 做 sha1 編碼，最後將資訊輸入進 DB
   
   > 如果創建失敗會跳轉回 register.php ，創建成功會跳轉至 index.php
+
+
+- - -
+### 12/24
+- 完善跳轉的顯示
+- 增加顯示個別用戶的文章 list.php
+- 增加文章預覽和 READ MORE 功能 article.php
+- TABLE messages 增加 views 欄 
+- 增加 side bar 顯示最新和最熱門文章
+- 增加 side bar 文章搜尋功能
+- 增加換頁功能，每四則文章一頁，網址輸入大於總頁數時會跳到最後一頁
+
+- - -
+### 12/25
+- 修復路徑 bug
+- 增加新的 table - comments ( 增加 foreign key 時要注意類別 )
+- 增加文章內留言功能
+- 增加刪除文章時也會將留言全部刪除的功能
+### comments
+- id int primary key aut_increment
+- user_name char(20)
+- comment char(255)
+- time char(16)
+- user_id int references users(id)
+- message_id int references messages(id)
