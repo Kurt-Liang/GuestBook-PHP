@@ -1,19 +1,6 @@
 <?php
-session_start();
-
 $url = "http://".$_SERVER['HTTP_HOST']."/";
-
-if (isset($_SESSION['userName'])) {
-    $user_name = $_SESSION['userName'];
-    $title = "See you next time, $user_name";
-    unset($_SESSION['userName']);
-    unset($_SESSION['userId']);
-} else {
-    $title = "Currently signed out";
-}
-
-
-?> 
+?>
 <html>   
 <head>   
 <meta http-equiv="refresh" content="3;url=<?php echo $url ?>">
@@ -32,9 +19,8 @@ if (isset($_SESSION['userName'])) {
 </head>
 <body>
 <?php
-    echo "<div id='title'>$title</div>
+    echo "<div id='title'>No articles found</div>
         <div id='index'>The page will jump after 3 seconds</div>";
 ?>
 </body>
 </html>
-

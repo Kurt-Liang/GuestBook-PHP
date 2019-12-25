@@ -1,8 +1,11 @@
 <?php
 session_start();
+
+$url = "http://".$_SERVER['HTTP_HOST']."/";
+
 if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
     $title = "Please enter name, password and enail";
-    $url = "/register.php";
+    $uri = $url."register.php";
 } else {
     $user_name = $_POST['userName'];
     $user_pwd = sha1($_POST['userPwd']);
@@ -13,7 +16,7 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
 
     if ($result->num_rows > 0) {
         $title = "$user_name is already used";
-        $url = "/register.php";
+        $uri = $url."register.php";
 
     } else {
         $sql = "INSERT INTO users (user_name, user_pwd, user_email)
@@ -21,7 +24,7 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
         $conn->query($sql);
 
         $title = "$user_name created successfully";
-        $url = "/";
+        $uri = $url."login.php";
     }
 
     
@@ -32,10 +35,15 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
 ?> 
 <html>   
 <head>   
-<meta http-equiv="refresh" content="3;url=<?php echo $url ?>">
+<meta http-equiv="refresh" content="3;url=<?php echo $uri ?>">
 <style>
 #title {
     font-size: 40px;
+    text-align: center;
+    margin-top: 60px;
+}
+#index {
+    font-size: 25px;
     text-align: center;
     margin-top: 60px;
 }
@@ -43,7 +51,8 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
 </head>
 <body>
 <?php
-    echo "<div id='title'>$title</div>"
+    echo "<div id='title'>$title</div>
+        <div id='index'>The page will jump after 3 seconds</div>";
 ?>
 </body>
 </html>

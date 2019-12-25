@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+$url = "http://".$_SERVER['HTTP_HOST']."/";
+
 if (isset($_SESSION['userName'])) {
 	$user_name = $_SESSION['userName'];
 } else {
@@ -33,17 +36,17 @@ Released   : 20111223
 		<div id="wrapper-bgbtm">
 			<div id="header" class="container">
 				<div id="logo">
-					<h1><a href="/">GuestBook</a></h1>
+					<h1><a href="<?php echo $url ?>">GuestBook</a></h1>
 					<p>Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a></p>
 				</div>
 				<div id="menu">
 					<ul>
-						<li><a href="/">Homepage</a></li>
-						<li><a href="guestbook.php">Guestbook</a></li>
-                        <li class="current_page_item"><a href="login.php"><?php echo $user_name ?></a></li>
+						<li><a href="<?php echo $url ?>">Homepage</a></li>
+						<li><a href="<?php echo $url ?>guestbook.php">Guestbook</a></li>
+                        <li class="current_page_item"><a href="<?php echo $url ?>login.php"><?php echo $user_name ?></a></li>
                         <?php
 							if (isset($_SESSION['userName'])) {
-								echo "<li><a href='logout.php'>LOGOUT</a></li>";
+								echo "<li><a href='".$url."logout.php'>LOGOUT</a></li>";
 							}
 						?>
 					</ul>
@@ -55,14 +58,14 @@ Released   : 20111223
 					<div class="post">
 						<div class="post-bgtop">
 							<div class="post-bgbtm">
-                                <h2 class="title"><a href="#">Register</a></h2>
+                                <h2 class="title"><a>Register</a></h2>
                                 <?php
                                     if (isset($_SESSION['userName'])) {
                                         echo "<div class='entry'>
                                             <p>Already logged in.</p>
                                         </div>";
                                     } else {
-                                        echo "<form class='form' action='register1.php', method='post'>
+                                        echo "<form class='form' action='".$url."register1.php', method='post'>
                                             <div style='margin:5px 10px 15px 200px;'>
                                                 <input type='text' name='userName' placeholder='User name'>
                                             </div>
@@ -90,9 +93,9 @@ Released   : 20111223
 					<ul>
 						<li>
 							<div id="search" >
-								<form method="get" action="#">
+								<form method="get" action="<?php echo $url ?>list.php">
 									<div>
-										<input type="text" name="s" id="search-text" value="" />
+										<input type="text" name="title" id="search-text" value="" />
 										<input type="submit" id="search-submit" value="GO" />
 									</div>
 								</form>
@@ -104,46 +107,35 @@ Released   : 20111223
 							<p>Mauris vitae nisl nec metus placerat perdiet est. Phasellus dapibus semper consectetuer hendrerit.</p>
 						</li>
 						<li>
-							<h2>Categories</h2>
+							<h2>Newer articles</h2>
 							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
+								<?php 
+									$conn = mysqli_connect("localhost","root","","guestbook");
+									$result = mysqli_query($conn,"SELECT * FROM messages order by id desc limit 5");
+									while($row = mysqli_fetch_array($result)){
+										$title = $row['title'];
+										$id = $row['id'];
+										$user_name = $row['user_name'];
+										echo "<li><a href='".$url."article.php?id=$id'><strong>$title</strong></a> by $user_name</li>";
+									}
+									$conn->close();
+								?>
 							</ul>
 						</li>
 						<li>
-							<h2>Blogroll</h2>
+							<h2>More popular articles</h2>
 							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
-							</ul>
-						</li>
-						<li>
-							<h2>Archives</h2>
-							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
-							</ul>
-						</li>
-						<li>
-							<h2>Links</h2>
-							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
+								<?php 
+									$conn = mysqli_connect("localhost","root","","guestbook");
+									$result = mysqli_query($conn,"SELECT * FROM messages order by views desc limit 5");
+									while($row = mysqli_fetch_array($result)){
+										$title = $row['title'];
+										$id = $row['id'];
+										$user_name = $row['user_name'];
+										echo "<li><a href='".$url."article.php?id=$id'><strong>$title</strong></a> by $user_name</li>";
+									}
+									$conn->close();
+								?>
 							</ul>
 						</li>
 					</ul>

@@ -1,12 +1,42 @@
 <?php
 session_start();
+
+$url = "http://".$_SERVER['HTTP_HOST']."/";
+
 if (isset($_SESSION['userName'])) {
 	$user_name = $_SESSION['userName'];
 } else {
 	$user_name = "Login";
 }
+
 $conn = mysqli_connect("localhost","root","","guestbook");
-$result = mysqli_query($conn,"SELECT * FROM messages order by id desc");
+$result = mysqli_query($conn,"SELECT count(*) FROM messages");
+while($row = mysqli_fetch_array($result)){
+	$count = $row['count(*)'];
+}
+
+if ($count%4 == 0){
+	$allpage = $count / 4;
+} else {
+	$allpage = floor($count/4) + 1;
+}
+
+
+$page = 1;
+if (isset($_GET['page'])) {
+	$page = $_GET['page'];
+}
+
+if ($page > $allpage) {
+	header("Location: ".$url."index.php?page=$allpage");
+}
+
+$x = ($page-1) * 4;
+$y = $page * 4;
+
+$result = mysqli_query($conn,"SELECT * FROM messages order by id desc limit $x, $y");
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
@@ -35,17 +65,17 @@ Released   : 20111223
 		<div id="wrapper-bgbtm">
 			<div id="header" class="container">
 				<div id="logo">
-					<h1><a href="/">GuestBook</a></h1>
+					<h1><a href="<?php echo $url ?>">GuestBook</a></h1>
 					<p>Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a></p>
 				</div>
 				<div id="menu">
 					<ul>
-						<li class="current_page_item"><a href="/">Homepage</a></li>
-						<li><a href="guestbook.php">Guestbook</a></li>
-						<li><a href="login.php"><?php echo $user_name ?></a></li>
+						<li class="current_page_item"><a href="<?php echo $url ?>">Homepage</a></li>
+						<li><a href="<?php echo $url ?>guestbook.php">Guestbook</a></li>
+						<li><a href="<?php echo $url ?>login.php"><?php echo $user_name ?></a></li>
 						<?php
 							if (isset($_SESSION['userName'])) {
-								echo "<li><a href='logout.php'>LOGOUT</a></li>";
+								echo "<li><a href='".$url."logout.php'>LOGOUT</a></li>";
 							}
 						?>
 					</ul>
@@ -56,24 +86,26 @@ Released   : 20111223
 				<div id="content">
 					<?php
 						while($row = mysqli_fetch_array($result)){
-    						$message = $row['message'];
+    						$message = substr($row['message'], 0, 221);
     						$title = $row['title'];
 							$time = $row['time'];
 							$userName = $row['user_name'];
 							$user_id = $row['user_id'];
 							$id = $row['id'];
 							$del = "";
-							if ($_SESSION['userId'] == $user_id) {
-								$del = "Delete";
+							if (isset($_SESSION['userId'])) {
+								if ($_SESSION['userId'] == $user_id) {
+									$del = "Delete";
+								}
 							}
 							echo "<div class='post'>
 									<div class='post-bgtop'>
 										<div class='post-bgbtm'>
-											<h2 class='title'><a href='#'>$title</a></h2>
-											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='#'>$userName</a></span></p>
+											<h2 class='title'><a href='".$url."article.php?id=$id'>$title</a></h2>
+											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='".$url."list.php?userId=$user_id'>$userName</a></span></p>
 											<div class='entry'>
-												<p>$message</p>
-												<p class='links'><a href='#' class='more'>Read More</a><a href='/delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
+												<p>$message ...</p>
+												<p class='links'><a href='".$url."article.php?id=$id' class='more'>Read More</a><a href='".$url."delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
 											</div>
 										</div>
 									</div>
@@ -81,29 +113,15 @@ Released   : 20111223
 						}
 						$conn->close();
 					?>
-
-					<div class="post">
-						<div class="post-bgtop">
-							<div class="post-bgbtm">
-								<h2 class="title"><a href="#">Welcome to Graffiti</a></h2>
-								<p class="meta"><span class="date">December 28, 2011</span><span class="posted">Posted by <a href="#">Someone</a></span></p>
-								<div class="entry">
-									<p>This is <strong>Graffiti</strong>, a free, fully standards-compliant CSS template designed by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.  This free template is released under the <a href="http://templated.co/license">Creative Commons Attribution</a> license, so you’re pretty much free to do whatever you want with it (even use it commercially) provided you give us credit for it. Have fun :)</p>
-									<p>Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum ipsum. Proin imperdiet est. Phasellus dapibus semper urna. Pellentesque ornare, orci in felis. Donec ut ante. In id eros. Suspendisse lacus turpis, cursus egestas at sem.</p>
-									<p class="links"><a href="#" class="more">Read More</a><a href="#" title="b0x" class="comments">Comments</a></p>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 				<!-- end #content -->
 				<div id="sidebar">
 					<ul>
 						<li>
 							<div id="search" >
-								<form method="get" action="#">
+								<form method="get" action="<?php echo $url ?>list.php">
 									<div>
-										<input type="text" name="s" id="search-text" value="" />
+										<input type="text" name="title" id="search-text" value="" />
 										<input type="submit" id="search-submit" value="GO" />
 									</div>
 								</form>
@@ -115,52 +133,50 @@ Released   : 20111223
 							<p>Mauris vitae nisl nec metus placerat perdiet est. Phasellus dapibus semper consectetuer hendrerit.</p>
 						</li>
 						<li>
-							<h2>Categories</h2>
+							<h2>Newer articles</h2>
 							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
+								<?php 
+									$conn = mysqli_connect("localhost","root","","guestbook");
+									$result = mysqli_query($conn,"SELECT * FROM messages order by id desc limit 5");
+									while($row = mysqli_fetch_array($result)){
+										$title = $row['title'];
+										$id = $row['id'];
+										$user_name = $row['user_name'];
+										echo "<li><a href='".$url."article.php?id=$id'><strong>$title</strong></a> by $user_name</li>";
+									}
+									$conn->close();
+								?>
 							</ul>
 						</li>
 						<li>
-							<h2>Blogroll</h2>
+							<h2>More popular articles</h2>
 							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
-							</ul>
-						</li>
-						<li>
-							<h2>Archives</h2>
-							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
-								<li><a href="#">Proin gravida orci porttitor</a></li>
-							</ul>
-						</li>
-						<li>
-							<h2>Links</h2>
-							<ul>
-								<li><a href="#">Aliquam libero</a></li>
-								<li><a href="#">Consectetuer adipiscing elit</a></li>
-								<li><a href="#">Metus aliquam pellentesque</a></li>
-								<li><a href="#">Suspendisse iaculis mauris</a></li>
-								<li><a href="#">Urnanet non molestie semper</a></li>
+								<?php 
+									$conn = mysqli_connect("localhost","root","","guestbook");
+									$result = mysqli_query($conn,"SELECT * FROM messages order by views desc limit 5");
+									while($row = mysqli_fetch_array($result)){
+										$title = $row['title'];
+										$id = $row['id'];
+										$user_name = $row['user_name'];
+										echo "<li><a href='".$url."article.php?id=$id'><strong>$title</strong></a> by $user_name</li>";
+									}
+									$conn->close();
+								?>
 							</ul>
 						</li>
 					</ul>
 				</div>
 				<!-- end #sidebar -->
 				<div style="clear: both;">&nbsp;</div>
+				<div style='margin: 10px 10px 20px 10px; text-align:center;'>
+					<?php
+						for ($i=1; $i <= $allpage; $i++) { 
+							echo "<a href='".$url."index.php?page=$i'>
+									<input type='button' value='$i'>
+								</a>";
+						}
+					?>
+				</div>
 			</div>
 			<!-- end #page -->
 		</div>

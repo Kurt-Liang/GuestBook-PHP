@@ -4,13 +4,24 @@ session_start();
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
 if (isset($_SESSION['userName'])) {
-	$user_name = $_SESSION['userName'];
+    $user_name = $_SESSION['userName'];
 } else {
 	$user_name = "Login";
-	header("Location: ".$url."login.php");
 }
-?>
+$conn = mysqli_connect("localhost","root","","guestbook");
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+	$result = mysqli_query($conn,"SELECT * FROM messages where id=$id");
+	if ($result->num_rows == 0) {
+		header("Location: ".$url."found.php");
+		exit;
+	}
+} else {
+    header("Location: $url");
+    exit;
+}
 
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
 Design by TEMPLATED
@@ -44,7 +55,7 @@ Released   : 20111223
 				<div id="menu">
 					<ul>
 						<li><a href="<?php echo $url ?>">Homepage</a></li>
-						<li class="current_page_item"><a href="<?php echo $url ?>guestbook.php">Guestbook</a></li>
+						<li><a href="<?php echo $url ?>guestbook.php">Guestbook</a></li>
 						<li><a href="<?php echo $url ?>login.php"><?php echo $user_name ?></a></li>
 						<?php
 							if (isset($_SESSION['userName'])) {
@@ -57,33 +68,79 @@ Released   : 20111223
 			<!-- end #header -->
 			<div id="page" class="container">
 				<div id="content">
-					<div class="post">
-						<div class="post-bgtop">
-							<div class="post-bgbtm">
-								<h2 class="title"><a>Leave a message</a></h2>
-								<?php
-								if (isset($_SESSION['userName'])) {
-									echo "<form class='form' action='".$url."action.php', method='post'>
-										<div style='margin:5px 10px 15px 20px;'>
-											<input type='text' name='title' placeholder='Title'>
-										</div>
-                                    	<div>
-                                        	<textarea name='message' cols='70', rows='10'></textarea>
-                                    	</div>
-                                    	<div class='entry'>
-									    	<p class='links'><input type='submit' name='submit' value='Create'></p>
-								    	</div>
-									</form>";
-								} else {
-									echo "<div class='entry'>
-                                        <p>Please login first.</p>
-                                    </div>";
+					<?php
+						while($row = mysqli_fetch_array($result)){
+    						$message = $row['message'];
+    						$title = $row['title'];
+							$time = $row['time'];
+							$userName = $row['user_name'];
+							$user_id = $row['user_id'];
+                            $id = $row['id'];
+                            $views = $row['views'] + 1;
+							$del = "";
+							if (isset($_SESSION['userId'])) {
+								if ($_SESSION['userId'] == $user_id) {
+									$del = "Delete";
 								}
+                            }
+                            
+                            mysqli_query($conn,"UPDATE messages SET views = $views  WHERE id = $id;");
 
-								?>
-							</div>
-						</div>
-					</div>
+							echo "<div class='post'>
+									<div class='post-bgtop'>
+										<div class='post-bgbtm'>
+											<h2 class='title'><a>$title</a></h2>
+											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='".$url."list.php?userId=$user_id'>$userName</a></span></p>
+											<div class='entry'>
+												<p>$message</p>
+												Views : <strong>$views</strong><p class='links'><a href='".$url."' class='more'>Home</a><a href='".$url."delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
+											</div>";
+
+											$commResult = mysqli_query($conn,"SELECT * FROM comments where message_id=$id");
+											if ($commResult->num_rows > 0) {
+												while($row = mysqli_fetch_array($commResult)){
+													echo "<HR style='border:1 dashed #987cb9' width='100%' SIZE=1>";
+
+													$commentName = $row['user_name'];
+													$comment = $row['comment'];
+													$commentTime = $row['time'];
+													$comment_user_id = $row['user_id'];
+													$comment_id = $row['id'];
+													$commentDel = "";
+
+													if (isset($_SESSION['userId'])) {
+														if ($_SESSION['userId'] == $comment_user_id) {
+															$commentDel = "Delete";
+														}
+													}
+
+													echo "<p class='meta'><span class='date'>$commentTime</span><span class='posted'>Commented by <a>$commentName</a></span></p>
+														<div class='entry'>
+															<p>$comment</p>
+															<p class='links'><a href='".$url."comment_delete.php?id=$id&comment_id=$comment_id' title='b0x' class='comments'>$commentDel</a></p>
+														</div>";
+												}
+											}
+
+											if (isset($_SESSION['userId'])) {
+												echo "<HR style='border:1 dashed #987cb9' width='100%' SIZE=1>
+													<form class='form' action='".$url."comment.php?id=".$id."', method='post'>
+														<div>
+															<textarea name='comment' cols='70', rows='10'></textarea>
+														</div>
+														<div class='entry'>
+															<p class='links'><input type='submit' name='submit' value='Comment'></p>
+														</div>
+													</form>";
+											}
+									echo "</div>
+									</div>
+								</div>";
+                        }
+                        
+						$conn->close();
+					?>
+					
 				</div>
 				<!-- end #content -->
 				<div id="sidebar">
@@ -150,5 +207,3 @@ Released   : 20111223
 <!-- end #footer -->
 </body>
 </html>
-
-

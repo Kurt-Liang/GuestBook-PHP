@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+$url = "http://".$_SERVER['HTTP_HOST']."/";
+
 if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
     $title = "Please enter name or password";
 } else {
@@ -25,10 +28,15 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
 ?> 
 <html>   
 <head>   
-<meta http-equiv="refresh" content="3;url=/">
+<meta http-equiv="refresh" content="3;url=<?php echo $url ?>">
 <style>
 #title {
     font-size: 40px;
+    text-align: center;
+    margin-top: 60px;
+}
+#index {
+    font-size: 25px;
     text-align: center;
     margin-top: 60px;
 }
@@ -36,7 +44,8 @@ if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
 </head>
 <body>
 <?php
-    echo "<div id='title'>$title</div>"
+    echo "<div id='title'>$title</div>
+        <div id='index'>The page will jump after 3 seconds</div>";
 ?>
 </body>
 </html>

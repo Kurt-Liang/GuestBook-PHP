@@ -1,22 +1,20 @@
 <?php
-session_start();
-
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
-if (isset($_SESSION['userName'])) {
-    $user_name = $_SESSION['userName'];
-    $title = "See you next time, $user_name";
-    unset($_SESSION['userName']);
-    unset($_SESSION['userId']);
-} else {
-    $title = "Currently signed out";
-}
+$id = $_GET['id'];
+$comment_id = $_GET['comment_id'];
+
+$conn = mysqli_connect("localhost","root","","guestbook");
+mysqli_query($conn,"DELETE FROM comments where id = $comment_id;");
+
+$title = "Successfully deleted";
+$conn->close();
 
 
 ?> 
 <html>   
-<head>   
-<meta http-equiv="refresh" content="3;url=<?php echo $url ?>">
+<head>
+<meta http-equiv="refresh" content="3;url=<?php echo $url ?>article.php?id=<?php echo $id ?>">
 <style>
 #title {
     font-size: 40px;

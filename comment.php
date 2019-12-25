@@ -7,20 +7,20 @@ date_default_timezone_set("Asia/Taipei");
 $t=time();
 $time = (date("Y-m-d H:i",$t));
 
-if (empty($_POST['message']) or empty($_POST['title'])) {
-    $title = "Please enter message";
+if (empty($_POST['comment'])) {
+    $title = "Please enter comment";
 } else {
-    $message = $_POST['message'];
-    $title = $_POST['title'];
+    $comment = $_POST['comment'];
     $user_name = $_SESSION['userName'];
     $user_id = $_SESSION['userId'];
+    $message_id = $_GET['id'];
     $conn = mysqli_connect("localhost","root","","guestbook");
-    $sql = "INSERT INTO messages (user_name, message, time, title, user_id)
-                VALUES ('$user_name', '$message', '$time', '$title', '$user_id');";
+    $sql = "INSERT INTO comments (user_name, comment, time, user_id, message_id)
+                VALUES ('$user_name', '$comment', '$time', '$user_id', '$message_id');";
 
     $conn->query($sql);
 
-    $title = "Created successfully";
+    $title = "Comment successfully";
 
     $conn->close();
 }
@@ -29,7 +29,7 @@ if (empty($_POST['message']) or empty($_POST['title'])) {
 ?> 
 <html>   
 <head>   
-<meta http-equiv="refresh" content="3;url=<?php echo $url ?>">
+<meta http-equiv="refresh" content="3;url=<?php echo $url ?>article.php?id=<?php echo $message_id ?>">
 <style>
 #title {
     font-size: 40px;
