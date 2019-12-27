@@ -1,6 +1,11 @@
 <?php
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
+if (!isset($_SESSION['userId'])) {
+    header("Location: $url");
+    exit;
+}
+
 $id = $_GET['id'];
 $conn = mysqli_connect("localhost","root","","guestbook");
 mysqli_query($conn,"DELETE FROM time_stamp where message_id = $id;");

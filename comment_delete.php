@@ -1,6 +1,11 @@
 <?php
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
+if (!isset($_SESSION['userId'])) {
+    header("Location: $url");
+    exit;
+}
+
 $id = $_GET['id'];
 $comment_id = $_GET['comment_id'];
 

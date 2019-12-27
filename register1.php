@@ -3,6 +3,11 @@ session_start();
 
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
+if (!isset($_SESSION['userId'])) {
+    header("Location: $url");
+    exit;
+}
+
 if (empty($_POST['userName']) or empty($_POST['userPwd'])) {
     $title = "Please enter name, password and enail";
     $uri = $url."register.php";

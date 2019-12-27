@@ -3,6 +3,11 @@ session_start();
 
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
+if (!isset($_SESSION['userId'])) {
+    header("Location: $url");
+    exit;
+}
+
 if (isset($_SESSION['userName'])) {
     $user_name = $_SESSION['userName'];
 } else {

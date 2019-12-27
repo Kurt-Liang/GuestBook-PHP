@@ -6,6 +6,11 @@ ini_set('display_errors', 0);
 
 $url = "http://".$_SERVER['HTTP_HOST']."/";
 
+if (!isset($_SESSION['userId'])) {
+    header("Location: $url");
+    exit;
+}
+
 date_default_timezone_set("Asia/Taipei");
 $t=time();
 $time = (date("Y-m-d H:i",$t));
