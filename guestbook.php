@@ -67,6 +67,9 @@ Released   : 20111223
 										<div style='margin:5px 10px 15px 20px;'>
 											<input type='text' name='title' placeholder='Title'>
 										</div>
+										<div style='margin:5px 10px 15px 20px;'>
+											<input type='text' name='video_mp4' placeholder='Please start with http:// or https:// and end with .mp4' size='60'>
+										</div>
                                     	<div>
                                         	<textarea name='message' cols='70', rows='10'></textarea>
                                     	</div>

@@ -42,6 +42,34 @@ Released   : 20111223
 <title>GuestBook</title>
 <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="http://fonts.googleapis.com/css?family=Ruthie" rel="stylesheet" type="text/css" />
+<link href="//vjs.zencdn.net/7.3.0/video-js.min.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/7.3.0/video.min.js"></script>
+<style>
+    .vertical-menu {
+		width:600px;
+		height:200px;
+		overflow-y:auto;
+		margin-left:9px;
+	}
+			
+	.vertical-menu input {
+		background-color:#eee;
+		color:black;
+		padding:10px;
+		text-decoration:none;
+		width:120;
+		height:90;
+	}
+			
+	.vertical-menu input:hover {
+		background-color:#ccc;
+	}
+			
+	.vertical-menu input.active {
+		background-color:#4ACF50;
+		color:white;
+	}
+</style>
 </head>
 <body>
 <div id="wrapper">
@@ -76,7 +104,8 @@ Released   : 20111223
 							$userName = $row['user_name'];
 							$user_id = $row['user_id'];
                             $id = $row['id'];
-                            $views = $row['views'] + 1;
+							$views = $row['views'] + 1;
+							$video_mp4 = $row['video_mp4'];
 							$del = "";
 							if (isset($_SESSION['userId'])) {
 								if ($_SESSION['userId'] == $user_id) {
@@ -90,8 +119,45 @@ Released   : 20111223
 									<div class='post-bgtop'>
 										<div class='post-bgbtm'>
 											<h2 class='title'><a>$title</a></h2>
-											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='".$url."list.php?userId=$user_id'>$userName</a></span></p>
-											<div class='entry'>
+											<p class='meta'><span class='date'>$time</span><span class='posted'>Posted by <a href='".$url."list.php?userId=$user_id'>$userName</a></span></p>";
+											
+											if (!empty($video_mp4)) {
+												echo "<div>
+														<video id='my-video' class='video-js vjs-big-play-centered'></video>
+													</div>
+											
+
+
+											<div class='vertical-menu'>
+            									<input type='image' onclick='stamp("."0".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0001.png'>
+            									<input type='image' onclick='stamp("."50".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0002.png'>
+            									<input type='image' onclick='stamp("."68".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0003.png'>
+            									<input type='image' onclick='stamp("."115".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0004.png'>
+            									<input type='image' onclick='stamp("."144".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0005.png'>
+            									<input type='image' onclick='stamp("."180".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0006.png'>
+            									<input type='image' onclick='stamp("."189".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0007.png'>
+            									<input type='image' onclick='stamp("."226".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0008.png'>
+            									<input type='image' onclick='stamp("."243".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0009.png'>
+            									<input type='image' onclick='stamp("."288".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0010.png'>
+            									<input type='image' onclick='stamp("."320".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0011.png'>
+            									<input type='image' onclick='stamp("."397".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0012.png'>
+            									<input type='image' onclick='stamp("."418".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0013.png'>
+            									<input type='image' onclick='stamp("."440".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0014.png'>
+            									<input type='image' onclick='stamp("."445".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0015.png'>
+            									<input type='image' onclick='stamp("."456".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0016.png'>
+            									<input type='image' onclick='stamp("."468".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0017.png'>
+            									<input type='image' onclick='stamp("."478".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0018.png'>
+            									<input type='image' onclick='stamp("."487".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0019.png'>
+            									<input type='image' onclick='stamp("."497".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0020.png'>
+            									<input type='image' onclick='stamp("."557".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0021.png'>
+            									<input type='image' onclick='stamp("."615".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0022.png'>
+            									<input type='image' onclick='stamp("."667".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0023.png'>
+            									<input type='image' onclick='stamp("."706".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0024.png'>
+            									<input type='image' onclick='stamp("."732".");' src='http://d1gxuofruqp40q.cloudfront.net/slide/ebbdc6060d3e2469b7f007a5eb15081a/30157/thumbnail/0025.png'>
+											</div>";
+											}
+
+											echo "<div class='entry'>
 												<p>$message</p>
 												Views : <strong>$views</strong><p class='links'><a href='".$url."' class='more'>Home</a><a href='".$url."delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
 											</div>";
@@ -99,7 +165,7 @@ Released   : 20111223
 											$commResult = mysqli_query($conn,"SELECT * FROM comments where message_id=$id");
 											if ($commResult->num_rows > 0) {
 												while($row = mysqli_fetch_array($commResult)){
-													echo "<HR style='border:1 dashed #987cb9' width='100%' SIZE=1>";
+													echo "<HR style='border:1 dashed' width='100%' SIZE=1>";
 
 													$commentName = $row['user_name'];
 													$comment = $row['comment'];
@@ -123,7 +189,7 @@ Released   : 20111223
 											}
 
 											if (isset($_SESSION['userId'])) {
-												echo "<HR style='border:1 dashed #987cb9' width='100%' SIZE=1>
+												echo "<HR style='border:1 dashed' width='100%' SIZE=1>
 													<form class='form' action='".$url."comment.php?id=".$id."', method='post'>
 														<div>
 															<textarea name='comment' cols='70', rows='10'></textarea>
@@ -207,3 +273,18 @@ Released   : 20111223
 <!-- end #footer -->
 </body>
 </html>
+<script>
+    const player = videojs('my-video',{
+        sources:[{ src: "<?php echo $video_mp4 ?>"}],
+		autoplay:true,
+        loop:true,
+        muted:true,
+        width:"540",
+        height:"303",
+        controls:true
+    });
+
+	function stamp(time){
+		player.currentTime(time);
+	}
+</script>
