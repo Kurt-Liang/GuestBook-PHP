@@ -3,6 +3,7 @@ $url = "http://".$_SERVER['HTTP_HOST']."/";
 
 $id = $_GET['id'];
 $conn = mysqli_connect("localhost","root","","guestbook");
+mysqli_query($conn,"DELETE FROM time_stamp where message_id = $id;");
 mysqli_query($conn,"DELETE FROM comments where message_id = $id;");
 mysqli_query($conn,"DELETE FROM messages where id = $id;");
 $title = "Successfully deleted";

@@ -24,9 +24,9 @@ if (empty($_POST['message']) or empty($_POST['title'])) {
     if (!empty($_POST['video_mp4'])) {
         $video_mp4 = $_POST['video_mp4'];
 
-        $http = substr($url, 0, 7);
-        $https = substr($url, 0, 8);
-        $end =  substr($url, -4);
+        $http = substr($video_mp4, 0, 7);
+        $https = substr($video_mp4, 0, 8);
+        $end =  substr($video_mp4, -4);
 
         if ($http == "http://" or $https == "https://" and $end == ".mp4") {
             $html = file_get_contents($video_mp4);

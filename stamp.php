@@ -12,6 +12,11 @@ $conn = mysqli_connect("localhost","root","","guestbook");
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 	$result = mysqli_query($conn,"SELECT * FROM messages where id=$id");
+	if (!isset($_SESSION['userId'])) {
+		header("Location: ".$url."found.php");
+		exit;
+	}
+
 	if ($result->num_rows == 0) {
 		header("Location: ".$url."found.php");
 		exit;
@@ -44,33 +49,6 @@ Released   : 20111223
 <link href="http://fonts.googleapis.com/css?family=Ruthie" rel="stylesheet" type="text/css" />
 <link href="//vjs.zencdn.net/7.3.0/video-js.min.css" rel="stylesheet">
 <script src="//vjs.zencdn.net/7.3.0/video.min.js"></script>
-<style>
-    .vertical-menu {
-		width:600px;
-		height:200px;
-		overflow-y:auto;
-		margin-left:9px;
-	}
-			
-	.vertical-menu input {
-		background-color:#eee;
-		color:black;
-		padding:10px;
-		text-decoration:none;
-		width:120;
-		height:90;
-		vertical-align:top;
-	}
-			
-	.vertical-menu input:hover {
-		background-color:#ccc;
-	}
-			
-	.vertical-menu input.active {
-		background-color:#4ACF50;
-		color:white;
-	}
-</style>
 </head>
 <body>
 <div id="wrapper">
@@ -126,94 +104,24 @@ Released   : 20111223
 												echo "<div>
 														<video id='my-video' class='video-js vjs-big-play-centered'></video>
 													</div>";
-											
-												
-
-													$stamp = mysqli_query($conn,"SELECT * FROM time_stamp where message_id=$message_id");
-													if ($stamp->num_rows >0) {
-														echo "<div class='vertical-menu'>";
-														while($row = mysqli_fetch_array($stamp)){
-															if (empty($row['image'])) {
-																$stamp_time = $row['time'];
-																$stamp_text = $row['text'];
-																$stamp_user_id = $row['user_id'];
-
-																echo "<input type='button' onclick='stamp($stamp_time)' value='$stamp_text' style='width:260px;height:200px;'>";
-
-
-															} else {
-																$stamp_time = $row['time'];
-																$stamp_image = $row['image'];
-																$stamp_user_id = $row['user_id'];
-															
-														
-																echo "<input type='image' onclick='stamp($stamp_time);' src='$stamp_image'>";
-															}
-														}
-														if (isset($_SESSION['userId'])) {
-															if ($_SESSION['userId'] == $stamp_user_id) {
-																echo "<input type='button' onclick='stamp_url()' value='new' style='width:260px;height:200px;'>";
-															}
-														}
-														echo "</div>";
-													} else {
-														if (isset($_SESSION['userId'])) {
-															
-															
-															if ($_SESSION['userId'] == $user_id) {
-																echo "<div class='vertical-menu'>";
-																echo "<input type='button' onclick='stamp_url()' value='new' style='width:260px;height:200px;'>";
-																echo "</div>";
-															}
-															
-														}
-													}
-
-												
 											}
 
-											echo "<div class='entry'>
-												<p>$message</p>
-												Views : <strong>$views</strong><p class='links'><a href='".$url."' class='more'>Home</a><a href='".$url."delete.php?id=$id' title='b0x' class='comments'>$del</a></p>
-											</div>";
+                                            ?>
 
-											$commResult = mysqli_query($conn,"SELECT * FROM comments where message_id=$id");
-											if ($commResult->num_rows > 0) {
-												while($row = mysqli_fetch_array($commResult)){
-													echo "<HR style='border:1 dashed' width='100%' SIZE=1>";
+                                            <div>
+                                                <form class='form' action='<?php echo $url."stamp_create.php?id=".$id ?>', method='post'>
+										            <div style='margin:20px 10px 30px 20px;'>
+											            <input type='text' name='min' placeholder='min' size='1'>
+														<input type='text' name='sec' placeholder='sec' size='1'>
+											            <input type='text' name='text' placeholder='Text or start with http:// or https://' size='49'>
+                                                        <input type='submit' name='submit' value='Create'>
+                                                    </div>
+									            </form>
+                                            </div>
 
-													$commentName = $row['user_name'];
-													$comment = $row['comment'];
-													$commentTime = $row['time'];
-													$comment_user_id = $row['user_id'];
-													$comment_id = $row['id'];
-													$commentDel = "";
 
-													if (isset($_SESSION['userId'])) {
-														if ($_SESSION['userId'] == $comment_user_id) {
-															$commentDel = "Delete";
-														}
-													}
-
-													echo "<p class='meta'><span class='date'>$commentTime</span><span class='posted'>Commented by <a>$commentName</a></span></p>
-														<div class='entry'>
-															<p>$comment</p>
-															<p class='links'><a href='".$url."comment_delete.php?id=$id&comment_id=$comment_id' title='b0x' class='comments'>$commentDel</a></p>
-														</div>";
-												}
-											}
-
-											if (isset($_SESSION['userId'])) {
-												echo "<HR style='border:1 dashed' width='100%' SIZE=1>
-													<form class='form' action='".$url."comment.php?id=".$id."', method='post'>
-														<div>
-															<textarea name='comment' cols='70', rows='10'></textarea>
-														</div>
-														<div class='entry'>
-															<p class='links'><input type='submit' name='submit' value='Comment'></p>
-														</div>
-													</form>";
-											}
+                                            <?php
+                                            
 									echo "</div>
 									</div>
 								</div>";
@@ -302,10 +210,4 @@ Released   : 20111223
 	function stamp(time){
 		player.currentTime(time);
 	}
-
-	function stamp_url(){
-		window.location.href = "stamp.php?id=<?php echo $message_id ?>";
-	}
-
 </script>
-
