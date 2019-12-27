@@ -92,3 +92,16 @@
 - 新增文章發布時能貼上影片網址，要求必須 `http://`或`https://`開頭和以`.mp4`結尾，並且後端判斷網址格式是否正確，如果正確會再發送請求至網址，如果有響應則確認這個網址可以使用，否則發布文章會失敗
 - 新增文章內顯示影片功能，如果沒有影片就不會顯示
 - 新增影片時間跳轉功能，點擊圖片就能跳轉到該圖片的時間位置
+
+- - -
+### 12/27
+- 新增新的 table 來存放所有的影片時間跳轉點
+- 新增使用者可以自己建立時間跳轉點
+
+### time_stamp
+- id int primary key aut_increment
+- time char(10)
+- image char(255)
+- text char(20)
+- user_id int references users(id)
+- message_id int references messages(id)
