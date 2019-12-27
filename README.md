@@ -97,6 +97,7 @@
 ### 12/27
 - 新增新的 table 來存放所有的影片時間跳轉點
 - 新增使用者可以自己建立時間跳轉點
+- 修復 bug
 
 ### time_stamp
 - id int primary key aut_increment
